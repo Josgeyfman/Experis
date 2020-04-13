@@ -20,13 +20,15 @@ typedef meet* meetp;
 
 typedef struct AD_T
 {
-	meetp diary;
+	meetp * diary;
 	size_t blockSize;
 	size_t elementNum;
 	size_t size; 
 } ad_t; 
   
 typedef ad_t* ad_p;
+
+void PrintMeeting(meetp _meetPtr);
 
 /*
 	Description: allocate an ad_t with given size and block size

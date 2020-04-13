@@ -60,15 +60,9 @@ ERRCODE SetMeeting(meetp* _meetPtr,float _startTime,float _endTime,int _roomNum)
 
 int CheckInput(float _startTime ,float _endTime ,int _room)
 {
-	int hour = (int)(_startTime);
-	float minutes = _startTime - hour;
-
-	if( hour >= MIN_HOUR && hour < MAX_HOUR &&  minutes>=MIN_MINUTE && minutes<MAX_MINUTE)
+	if( _startTime >= MIN_HOUR && _startTime < MAX_HOUR )
 	{
-		
-		hour = (int)(_endTime);
-		minutes = _endTime - hour;
-		if( hour >= MIN_HOUR && hour < MAX_HOUR &&  minutes>=MIN_MINUTE && minutes<MAX_MINUTE)
+		if( _endTime > MIN_HOUR && _endTime < MAX_HOUR )
 		{
 			if( _room > 0 )
 			{
@@ -79,6 +73,20 @@ int CheckInput(float _startTime ,float _endTime ,int _room)
 	return 0;
 }
 
+int PrintAD(ad_p _adPtr)
+{
+	int i;
+	if(_adPtr!=NULL && _adPtr->diary!=NULL)
+	{
+		printf("AD size:%ld blockSize:%ld element num:%ld\n" ,_adPtr->size,_adPtr->blockSize,_adPtr->elementNum);
+		for(i=0;i<_adPtr->elementNum;i++)
+		{
+			printf("Meeting No:%d ",i+1);
+			PrintMeeting(_adPtr->diary+i); 
+		}
+	}
+}
+
 ERRCODE CreateMeeting(meetp* _newMeet,float _startTime,float _endTime ,int _roomNum)
 {
 	
@@ -86,9 +94,7 @@ ERRCODE CreateMeeting(meetp* _newMeet,float _startTime,float _endTime ,int _room
 	{
 		free(*_newMeet);
 		*_newMeet=NULL;
-	}
-	_startTime  =	((int)(_startTime*100+.5)/100.0);
-	_endTime    =	((int)(_endTime*100+.5)/100.0);	
+	}	
 	if(_endTime >_startTime && CheckInput(_startTime,_endTime,_roomNum))
 	{
 		(*_newMeet) = (meetp)malloc(sizeof(meet));
@@ -130,22 +136,6 @@ void PrintMeeting(meetp _meetPtr)
 }
 
 
-int PrintAD(ad_p _adPtr)
-{
-	int i = -1;
-	if(_adPtr!=NULL && _adPtr->diary!=NULL)
-	{
-		printf("AD size:%ld blockSize:%ld element num:%ld\n" ,_adPtr->size,_adPtr->blockSize,_adPtr->elementNum);
-		for(i=0;i<_adPtr->elementNum;i++)
-		{
-			printf("Meeting No:%d ",i+1);
-			PrintMeeting(_adPtr->diary+i); 
-		}
-	}
-	return i;
-}
-
-
 ERRCODE ResizeDiary(ad_p _adPtr)
 {
 	meetp mp = _adPtr->diary;
@@ -167,7 +157,7 @@ ERRCODE ResizeDiary(ad_p _adPtr)
 ERRCODE CheckOverlap(ad_p _adPtr,float _startTime,float _endTime)
 {
 	int i;
-	if(_adPtr != NULL || _startTime < _endTime)
+	if(_adPtr != NULL || _startTime >= _endTime)
 	{
 		for(i=0;i<_adPtr->elementNum;i++)
 		{

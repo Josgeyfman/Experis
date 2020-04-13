@@ -4,6 +4,7 @@
 #define REMOVE 3
 #define PRINT 4
 #define EXIT 5
+#define CREATE 6
 
 void PrintERRCODE(ERRCODE _err)
 {
@@ -23,14 +24,14 @@ int main()
 {
 	size_t  size,blockSize;	
 	int     command,roomNum,exit=0;
-	float   startTime,endTime;
+	float   startTime,endTime ;
 	ad_p adPtr = NULL;
 	meetp mp = NULL;
 	ERRCODE result;
 	printf("Please enter initial size:\n");
-	scanf("%zu",&size);
+	scanf("%lu",&size);
 	printf("Please enter blockSize:\n");
-	scanf("%zu",&blockSize);
+	scanf("%lu",&blockSize);
 	if(size<1 || blockSize < 1){
 		printf("ERR_ILLEGAL_INPUT\n");
 		return -1;
@@ -84,21 +85,26 @@ int main()
 					PrintERRCODE(result);
 					break;
 			
-		         case PRINT:	PrintAD(adPtr);	
+		         case PRINT:    result = PrintAD(adPtr);
+					if(result>0)
+					{
+						printf("ERR_SUCCESS printed %d meetings\n", result);
+					}
+					else
+					{
+						PrintERRCODE(result);
+					}	
 					break;
 
 			  case EXIT:	exit=1; 
 					break;
+	
 		}
 		
 	}while(!exit);
 	
 	DestroyAD(adPtr);
-	if(mp!=NULL)
-	{
-		free(mp);
-	}
 	adPtr=NULL;
-
+	mp =NULL;
 	return 0;
 }
