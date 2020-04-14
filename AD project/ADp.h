@@ -65,8 +65,7 @@ ERRCODE InsertMeet(ad_p _adPtr,meetp* _newMeet);
 ERRCODE RemoveMeet(ad_p _adPtr,float _startTime);
 
 /*
-	Description: free ad_t and free it's diar
-y
+	Description: free ad_t and free it's diary
 	input: adPtr - pointer to an ad_t
 */
 void DestroyAD(ad_p _adPtr);
