@@ -1,11 +1,10 @@
-#include"AD.h"
+#include"ADp.h"
 
-ERRCODE SetAD(ad_p _adPtr,size_t _initialSize,size_t _blockSize,size_t _elementNum)
+ERRCODE SetAD(ad_p _adPtr,meetp* _meetPtr,size_t _initialSize,size_t _blockSize,size_t _elementNum)
 {
 	if(_adPtr!=NULL)
 	{
-		/*&(_adPtr)->diary   = (*_meetPtr);
-		printf("in set A)D diary address : %p , meetPtr address : %p\n",(void*)(_adPtr->diary) ,(void*)(*_meetPtr));*/
+		_adPtr->diary      = _meetPtr;
 		_adPtr->blockSize  = _blockSize;
 		_adPtr->size	   = _initialSize; 
 		return ERR_SUCCESS;
@@ -20,7 +19,6 @@ ad_p CreateAD(size_t _initialSize,size_t _blockSize)
 	ad_p adPtr = NULL;
 	meetp* meetPtr =NULL;
 	ERRCODE result;
-	int i;	
 	if(_initialSize > 0 && _blockSize>0 )
 	{
 		adPtr = (ad_p)malloc(sizeof(ad_t));
@@ -29,13 +27,7 @@ ad_p CreateAD(size_t _initialSize,size_t _blockSize)
 			meetPtr=(meetp*)malloc(_initialSize*sizeof(meetp));
 			if(meetPtr!=NULL)
 			{
-				printf("diary address : %p , meetPtr address : %p\n",(void*)(adPtr->diary) ,(void*)(meetPtr));
-				result = SetAD(adPtr,_initialSize,_blockSize,0);
-				adPtr.diary = meetPtr;	
-				adPtr->diary = meetPtr;
-				(*adPtr).diary = meetPtr;
-
-				printf("diary address : %p , meetPtr address : %p\n",(void*)&(adPtr->diary)[1] ,(void*)(meetPtr));
+				result = SetAD(adPtr,meetPtr,_initialSize,_blockSize,0);
 				if(result != ERR_SUCCESS)
 				{
 					free(meetPtr);
@@ -71,7 +63,6 @@ int CheckInput(float _startTime ,float _endTime ,int _room)
 {
 	int hour = (int)(_startTime);
 	float minutes = _startTime - hour;
-
 	if( hour >= MIN_HOUR && hour < MAX_HOUR &&  minutes>=MIN_MINUTE && minutes<MAX_MINUTE)
 	{
 		
@@ -91,11 +82,6 @@ int CheckInput(float _startTime ,float _endTime ,int _room)
 ERRCODE CreateMeeting(meetp* _newMeet,float _startTime,float _endTime ,int _roomNum)
 {
 	
-	/*if(_newMeet!=NULL)
-	{
-		free(*_newMeet);
-		*_newMeet=NULL;
-	}*/
 	_startTime  =	((int)(_startTime*100+.5)/100.0);
 	_endTime    =	((int)(_endTime*100+.5)/100.0);	
 	if(_endTime >_startTime && CheckInput(_startTime,_endTime,_roomNum))
@@ -126,8 +112,7 @@ void DestroyAD(ad_p _adPtr)
 		{
 			for(i=0;i<_adPtr->elementNum;i++)
 			{	
-				free(&(_adPtr->diary)[i]);
-				/*free((_adPtr->diary+i));*/
+				free((_adPtr->diary)[i]);
 			}
 		}
 		free(_adPtr);
@@ -139,7 +124,7 @@ void PrintMeeting(meetp _meetPtr)
 	if(_meetPtr!=NULL)
 	{
 		printf("[start time:%.2f end time:%.2f room num:%d]\n"
-				, (_meetPtr)->startTime,(_meetPtr)->endTime,(_meetPtr)->roomNum);
+				, _meetPtr->startTime,_meetPtr->endTime,_meetPtr->roomNum);
 	}
 }
 
@@ -153,7 +138,7 @@ int PrintAD(ad_p _adPtr)
 		for(i=0;i<_adPtr->elementNum;i++)
 		{
 			printf("Meeting No:%d ",i+1);
-			PrintMeeting((&_adPtr->diary)[i]); 
+			PrintMeeting(_adPtr->diary[i]); 
 		}
 	}
 	return i;
@@ -162,7 +147,7 @@ int PrintAD(ad_p _adPtr)
 
 ERRCODE ResizeDiary(ad_p _adPtr)
 {
-	meetp* mp = &(_adPtr->diary);
+	meetp* mp = _adPtr->diary;
 	size_t newSize = _adPtr->size+_adPtr->blockSize;
 	if(NULL!=mp || newSize>0)
 	{
@@ -170,7 +155,7 @@ ERRCODE ResizeDiary(ad_p _adPtr)
 		if(mp!=NULL)
 		{
 			_adPtr->size+=_adPtr->blockSize;
-			_adPtr->diary = (*mp);
+			_adPtr->diary = (mp);
 			return ERR_SUCCESS;
 		}
 		return ERR_MEM_ALLOC;
@@ -185,22 +170,16 @@ ERRCODE CheckOverlap(ad_p _adPtr,float _startTime,float _endTime)
 	{
 		for(i=0;i<_adPtr->elementNum;i++)
 		{
-			if((_adPtr->diary)[i].startTime <=_startTime && (_adPtr->diary)[i].endTime > _startTime) 
+			if((_adPtr->diary)[i]->startTime <=_startTime && (_adPtr->diary)[i]->endTime > _startTime) 
 			{
-				printf("O1 diary[i].start: %f <= %f && diary[i].end: %f > %f\n"
-				,(_adPtr->diary)[i].startTime ,_startTime ,(_adPtr->diary)[i].endTime,_startTime);
 				return ERR_OVERLAP;
 			}
-			if((_adPtr->diary)[i].startTime < _endTime && (_adPtr->diary)[i].endTime >= _endTime) 
+			if((_adPtr->diary)[i]->startTime < _endTime && (_adPtr->diary)[i]->endTime >= _endTime) 
 			{
-				printf("O2 diary[i].start: %f < %f && diary[i].end: %f >= %f\n"
-				,(_adPtr->diary)[i].startTime ,_endTime ,(_adPtr->diary)[i].endTime,_endTime);
 				return ERR_OVERLAP;
 			}
-			if((_adPtr->diary)[i].startTime >= _startTime && (_adPtr->diary)[i].endTime <= _endTime) 
+			if((_adPtr->diary)[i]->startTime >= _startTime && (_adPtr->diary)[i]->endTime <= _endTime) 
 			{
-				printf("O3 diary[i].start: %f >= %f && diary[i].end: %f <= %f\n"
-				,(_adPtr->diary)[i].startTime ,_startTime ,(_adPtr->diary)[i].endTime,_endTime);
 				return ERR_OVERLAP;
 			}		
 		}
@@ -213,9 +192,9 @@ void SwapMeeting(meetp* _meet1,meetp* _meet2)
 {
 	meetp temp;
 
-	temp   = (*_meet1);
-	_meet1 = _meet2;
-	_meet2 =  &temp;
+	temp      = (*_meet1);
+	(*_meet1) = (*_meet2);
+	(*_meet2) =  temp;
 
 }
 
@@ -244,13 +223,11 @@ ERRCODE InsertMeet(ad_p _adPtr,meetp* _newMeet)
 	ERRCODE result = ERR_ILLEGAL_INPUT;
 	if(_adPtr!=NULL && (*_newMeet)!=NULL )
 	{
-		result = CheckOverlap(_adPtr,(**_newMeet).startTime,(**_newMeet).endTime);
-		printf("here1\n");
+		result = CheckOverlap(_adPtr,(*_newMeet)->startTime,(*_newMeet)->endTime);
 		if(result==ERR_SUCCESS)
 		{
 			if(_adPtr->elementNum == _adPtr->size)
 			{
-				printf("here2 rezinig\n");
 				result = ResizeDiary(_adPtr);
 				if(ERR_SUCCESS!=result)
 				{
@@ -258,17 +235,8 @@ ERRCODE InsertMeet(ad_p _adPtr,meetp* _newMeet)
 					return result;
 				}
 			}
-			printf("here3 print meeting before insert\n");
-			PrintMeeting(*_newMeet);
-			
-			(&_adPtr->diary)[(_adPtr->elementNum)] = (*_newMeet);
-			
-			printf("here4 print iserted meeting\n");
-			PrintMeeting((&_adPtr->diary)[(_adPtr->elementNum)]);
-			
-			printf("here5\n");	
-			(_adPtr->elementNum)++	;	
-			BubbleSortDiary((&_adPtr->diary),_adPtr->elementNum);
+			(_adPtr->diary)[(_adPtr->elementNum)++] = (*_newMeet);
+			BubbleSortDiary(_adPtr->diary,_adPtr->elementNum);
 			_newMeet=NULL;
 			
 		}
@@ -285,7 +253,7 @@ int FindMeet(ad_p _adPtr,float _startTime)
 		{		
 			for(i=0;i<_adPtr->elementNum;i++)
 			{
-				if((_adPtr->diary)[i].startTime == _startTime) 
+				if((_adPtr->diary)[i]->startTime == _startTime) 
 				{
 					return i;
 				}
@@ -303,12 +271,12 @@ ERRCODE RemoveMeet(ad_p _adPtr,float _startTime)
 	i = FindMeet(_adPtr,_startTime);
 	if(i>=0)
 	{
-		(_adPtr->diary)[i].startTime = MAX_HOUR;
+		(_adPtr->diary)[i]->startTime = MAX_HOUR;
 		if(_adPtr->elementNum>1)
 		{
-			BubbleSortDiary(&(_adPtr->diary),_adPtr->elementNum);
+			BubbleSortDiary(_adPtr->diary,_adPtr->elementNum);
 		}
-		free((&_adPtr->diary)[--(_adPtr->elementNum)]);
+		free((_adPtr->diary)[(_adPtr->elementNum)--]);
 		return ERR_SUCCESS;
 	}
 	return i;
