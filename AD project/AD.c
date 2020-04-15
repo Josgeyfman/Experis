@@ -7,6 +7,7 @@ ERRCODE SetAD(ad_p _adPtr,meetp _meetPtr,size_t _initialSize,size_t _blockSize,s
 		_adPtr->diary	   = _meetPtr;
 		_adPtr->blockSize  = _blockSize;
 		_adPtr->size	   = _initialSize; 
+		_adPtr->elementNum = _elementNum;
 		return ERR_SUCCESS;
 	}
 	return ERR_ILLEGAL_INPUT;

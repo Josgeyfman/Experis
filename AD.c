@@ -157,7 +157,7 @@ ERRCODE ResizeDiary(ad_p _adPtr)
 ERRCODE CheckOverlap(ad_p _adPtr,float _startTime,float _endTime)
 {
 	int i;
-	if(_adPtr != NULL || _startTime >= _endTime)
+	if(_adPtr != NULL || _startTime < _endTime)
 	{
 		for(i=0;i<_adPtr->elementNum;i++)
 		{

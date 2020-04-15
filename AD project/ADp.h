@@ -1,3 +1,6 @@
+#ifndef ADP_H
+#define ADP_H
+
 #include<stdio.h>
 #include<stdlib.h>
 #define MAX_HOUR 24.
@@ -85,6 +88,7 @@ int PrintAD(ad_p _adPtr);
 */
 int FindMeet(ad_p _adPtr,float _startTime);
 
+#endif
 
 
 
