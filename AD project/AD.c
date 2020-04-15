@@ -7,7 +7,11 @@ ERRCODE SetAD(ad_p _adPtr,meetp _meetPtr,size_t _initialSize,size_t _blockSize,s
 		_adPtr->diary	   = _meetPtr;
 		_adPtr->blockSize  = _blockSize;
 		_adPtr->size	   = _initialSize; 
+<<<<<<< HEAD
 		_adPtr->elementNum = _elementNum;
+=======
+		_adPtr->elementNum = _elementNum; 
+>>>>>>> 7bcee07b184f5a02418ae4d2d87316ec3d55d07a
 		return ERR_SUCCESS;
 	}
 	return ERR_ILLEGAL_INPUT;
