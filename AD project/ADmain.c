@@ -4,10 +4,6 @@
 #define REMOVE 3
 #define PRINT 4
 #define EXIT 5
-<<<<<<< HEAD
-
-=======
->>>>>>> 7bcee07b184f5a02418ae4d2d87316ec3d55d07a
 
 void PrintERRCODE(ERRCODE _err)
 {
