@@ -4,7 +4,6 @@
 #define REMOVE 3
 #define PRINT 4
 #define EXIT 5
-#define CREATE 6
 
 void PrintERRCODE(ERRCODE _err)
 {
