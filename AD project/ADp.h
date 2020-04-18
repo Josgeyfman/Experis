@@ -1,6 +1,5 @@
 #ifndef ADP_H
 #define ADP_H
-
 #include<stdio.h>
 #include<stdlib.h>
 #define MAX_HOUR 24.
@@ -8,27 +7,14 @@
 #define MAX_MINUTE 0.6
 #define MIN_MINUTE 0.
 
-
 typedef enum {ERR_SUCCESS=0,ERR_ILLEGAL_INPUT=-1,ERR_UNDERFLOW=-2,ERR_NOT_FOUND=-3, ERR_MEM_ALLOC=-4,ERR_OVERLAP=-5} ERRCODE; 
 
-typedef struct Meeting
-{
-	float startTime;
-	float endTime;
-	int roomNum;
+typedef struct Meeting meet;
 
-} meet;
+typedef struct AD_T ad_t; 
 
-typedef meet* meetp;
+typedef meet* meetp;  
 
-typedef struct AD_T
-{
-	meetp * diary;
-	size_t blockSize;
-	size_t elementNum;
-	size_t size; 
-} ad_t; 
-  
 typedef ad_t* ad_p;
 
 void PrintMeeting(meetp _meetPtr);

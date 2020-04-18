@@ -1,21 +1,36 @@
+#ifndef ADP_H
+#define ADP_H
 #include<stdio.h>
 #include<stdlib.h>
 #define MAX_HOUR 24.
 #define MIN_HOUR 0.
 #define MAX_MINUTE 0.6
 #define MIN_MINUTE 0.
+#define MAX_LINE 100
 
-typedef enum {ERR_SUCCESS=0,ERR_ILLEGAL_INPUT=-1,ERR_UNDERFLOW=-2,ERR_NOT_FOUND=-3, ERR_MEM_ALLOC=-4,ERR_OVERLAP=-5} ERRCODE; 
+typedef enum {ERR_SUCCESS=0,ERR_ILLEGAL_INPUT=-1,ERR_UNDERFLOW=-2,ERR_NOT_FOUND=-3, ERR_MEM_ALLOC=-4,ERR_OVERLAP=-5,ERR_FILE_OPEN=-6,ERR_ALREADY_EXISTS=-7} ERRCODE; 
 
 typedef struct Meeting meet;
 
-typedef struct AD_T ad_t;
+typedef struct AD_T ad_t; 
+
+typedef meet* meetp;  
 
 typedef ad_t* ad_p;
 
-typedef meet* meetp;
+/*
+	Description: Save diary to diary.txt file in the local folder
+	input: _adPtr - pointer to an ad_t	 	
+	output: ERR_SUCCESS if saved, ERR_FILE_OPEN otherwise
+*/
+ERRCODE SaveDiary(ad_p _adPtr);
 
-
+/*
+	Description: load diary.txt file to a new diary instance
+	input: _adPtr - pointer to an ad_t	 	
+	output: ERR_SUCCESS if saved, ERRCODE otherwise
+*/
+ERRCODE LoadDiary(ad_p* _adPtr);
 
 /*
 	Description: allocate an ad_t with given size and block size
@@ -52,8 +67,7 @@ ERRCODE InsertMeet(ad_p _adPtr,meetp* _newMeet);
 ERRCODE RemoveMeet(ad_p _adPtr,float _startTime);
 
 /*
-	Description: free ad_t and free it's diar
-y
+	Description: free ad_t and free it's diary
 	input: adPtr - pointer to an ad_t
 */
 void DestroyAD(ad_p _adPtr);
@@ -73,6 +87,13 @@ int PrintAD(ad_p _adPtr);
 */
 int FindMeet(ad_p _adPtr,float _startTime);
 
+/*
+	Description: print error string by err number
+	input: _err -number of error
+*/
+void PrintERRCODE(ERRCODE _err);
+
+#endif
 
 
 

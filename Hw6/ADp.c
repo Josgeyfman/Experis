@@ -16,6 +16,68 @@ struct AD_T
 	size_t size; 
 }; 
 
+ERRCODE SaveDiary(ad_p _adPtr)
+{
+	FILE* fp;
+	int i;       
+	fp = fopen("diary.txt", "w");        	
+	if(fp == NULL)  
+	{                    
+		printf("Error in file opening\n");
+		return ERR_FILE_OPEN;
+	}
+	
+	fprintf(fp,"%-20lu%-20lu%lu\n",_adPtr->blockSize,_adPtr->elementNum,_adPtr->size);
+	for(i=0;i<_adPtr->elementNum;i++)
+	{
+		fprintf(fp,"%-20f%-20f%d\n",_adPtr->diary[i]->startTime,_adPtr->diary[i]->endTime,_adPtr->diary[i]->roomNum);
+	}
+	
+	fclose(fp);
+	return ERR_SUCCESS;
+
+}
+
+ERRCODE LoadDiary(ad_p* _adPtr)
+{
+	FILE* fp;
+	size_t blockSize,elementNum,size;
+	float startTime,endTime;
+	int i ,roomNum;   
+	ERRCODE result;
+	meetp mp;
+	
+	fp = fopen("diary.txt", "r");        	
+	if(fp == NULL)  
+	{                    
+		return ERR_FILE_OPEN;
+	}
+	if((*_adPtr) != NULL)  
+	{                    
+		return ERR_ALREADY_EXISTS;
+	}
+	
+	fscanf(fp,"%lu%lu%lu",&blockSize,&elementNum,&size);
+	(*_adPtr) = CreateAD(size,blockSize);
+	for(i=0;i<elementNum;i++)
+	{
+		fscanf(fp,"%f%f%d",&startTime,&endTime,&roomNum);
+		result = CreateMeeting(&mp,startTime,endTime,roomNum);
+		if(result==ERR_SUCCESS)
+		{
+			result = InsertMeet((*_adPtr),&mp);
+			if(result!=ERR_SUCCESS)
+			{
+				return result;
+			}
+		}
+	}
+	
+	fclose(fp);
+	return ERR_SUCCESS;
+
+}
+
 ERRCODE SetAD(ad_p _adPtr, meetp* _diaryPtr, size_t _initialSize , size_t _blockSize , size_t _elementNum)
 {
 	if(_adPtr !=NULL)
@@ -300,5 +362,19 @@ ERRCODE RemoveMeet(ad_p _adPtr,float _startTime)
 	
 }
 
+void PrintERRCODE(ERRCODE _err)
+{
+	switch(_err)
+	{
+		case ERR_SUCCESS: 		printf("ERR_SUCCESS\n"); 	break;
+		case ERR_ILLEGAL_INPUT: 	printf("ERR_ILLEGAL_INPUT\n");  break;
+		case ERR_UNDERFLOW: 		printf("ERR_UNDERFLOW\n"); 	break;
+		case ERR_NOT_FOUND: 		printf("ERR_NOT_FOUND\n"); 	break;
+		case ERR_MEM_ALLOC: 		printf("ERR_MEM_ALLOC\n"); 	break;
+		case ERR_OVERLAP: 		printf("ERR_OVERLAP\n"); 	break;
+		case ERR_FILE_OPEN:		printf("ERR_FILE_OPEN\n"); 	break;
+		case ERR_ALREADY_EXISTS:	printf("ERR_ALREADY_EXISTS\n"); break;
+	}
+}
 
 

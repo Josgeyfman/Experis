@@ -11,11 +11,11 @@ void PrintERRCODE(ERRCODE _err)
 	switch(_err)
 	{
 		case ERR_SUCCESS: 	    printf("ERR_SUCCESS\n");    	break;
-		case ERR_ILLEGAL_INPUT: printf("ERR_ILLEGAL_INPUT\n");  break;
-		case ERR_UNDERFLOW: 	printf("ERR_UNDERFLOW\n");  	break;
-		case ERR_NOT_FOUND: 	printf("ERR_NOT_FOUND\n");  	break;
-		case ERR_MEM_ALLOC: 	printf("ERR_MEM_ALLOC\n");  	break;
-		case ERR_OVERLAP:    	printf("ERR_OVERLAP\n");    	break;
+		case ERR_ILLEGAL_INPUT:     printf("ERR_ILLEGAL_INPUT\n");      break;
+		case ERR_UNDERFLOW: 	    printf("ERR_UNDERFLOW\n");  	break;
+		case ERR_NOT_FOUND: 	    printf("ERR_NOT_FOUND\n");  	break;
+		case ERR_MEM_ALLOC: 	    printf("ERR_MEM_ALLOC\n");  	break;
+		case ERR_OVERLAP:    	    printf("ERR_OVERLAP\n");    	break;
 	}
 }
 
@@ -28,9 +28,9 @@ int main()
 	meetp mp = NULL;
 	ERRCODE result;
 	printf("Please enter initial size:\n");
-	scanf_s("%lu",&size);
+	scanf("%lu",&size);
 	printf("Please enter blockSize:\n");
-	scanf_s("%lu",&blockSize);
+	scanf("%lu",&blockSize);
 	if(size<1 || blockSize < 1){
 		printf("ERR_ILLEGAL_INPUT\n");
 		return -1;
@@ -47,15 +47,15 @@ int main()
 	{	
 		printf("\nPlease enter command:\nInsert New Meeting: 1\nFind Meeting: 2\nRemove Meeting: 3");
 		printf("\nPrint Diary: 4\nExit: 5\n");
-		scanf_s("%d",&command);
+		scanf("%d",&command);
 		switch(command)
 		{
 			case INSERT: 	printf("Please enter meeting start time:\n");
-					scanf_s("%f",&startTime);
+					scanf("%f",&startTime);
 					printf("Please enter meeting end time:\n");
-					scanf_s("%f",&endTime);
+					scanf("%f",&endTime);
 					printf("Please enter meeting room number:\n");
-					scanf_s("%d",&roomNum);
+					scanf("%d",&roomNum);
 					result = CreateMeeting(&mp,startTime,endTime,roomNum);
 					if(result==ERR_SUCCESS)
 					{
@@ -65,7 +65,7 @@ int main()
 					break;
 			
 			case FIND:      printf("Please enter start time of meeting to be found:\n");
-					scanf_s("%f",&startTime);
+					scanf("%f",&startTime);
 					result = FindMeet(adPtr,startTime);
 					if(result>=0)
 					{
@@ -79,7 +79,7 @@ int main()
 			
 		
 			case REMOVE:  	printf("Please enter start time of meeting to be removed:\n");
-					scanf_s("%f",&startTime);
+					scanf("%f",&startTime);
 					result = RemoveMeet(adPtr,startTime);
 					PrintERRCODE(result);
 					break;

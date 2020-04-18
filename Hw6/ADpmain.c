@@ -1,44 +1,28 @@
 #include"ADp.h"
-#define CREATE 1
-#define INSERT 2
-#define FIND 3
-#define REMOVE 4
-#define PRINT 5
-#define DESTROY 6
-#define EXIT 7
 
-
-
-void PrintERRCODE(ERRCODE _err)
-{
-	switch(_err)
-	{
-		case ERR_SUCCESS: 	printf("ERR_SUCCESS\n"); 	break;
-		case ERR_ILLEGAL_INPUT: printf("ERR_ILLEGAL_INPUT\n");  break;
-		case ERR_UNDERFLOW: 	printf("ERR_UNDERFLOW\n"); 	break;
-		case ERR_NOT_FOUND: 	printf("ERR_NOT_FOUND\n"); 	break;
-		case ERR_MEM_ALLOC: 	printf("ERR_MEM_ALLOC\n"); 	break;
-		case ERR_OVERLAP: 	printf("ERR_OVERLAP\n"); 	break;
-	}
-}
+enum {LOAD=0,CREATE=1,INSERT=2,FIND=3,REMOVE=4,PRINT=5,SAVE=6,DESTROY=7,EXIT=8};
 
 int main()
 {
 	size_t  size,blockSize;	
-	int     command,roomNum,exit=0;
+	int    	command,roomNum,exit=0;
 	float   startTime,endTime ;
-	char x = 150;
 	ad_p adPtr = NULL;
 	meetp mp = NULL;
 	ERRCODE result;
-	printf("%d\n" ,x);
 	do
 	{	
-		printf("\nPlease enter command:\nCreate Diary: 1\nInsert New Meeting: 2\nFind Meeting: 3\nRemove Meeting: 4");
-		printf("\nPrint Diary: 5\nDestroy Diary: 6\nExit: 7\n");
+		printf("\nPlease enter command:\nLoad Diary: 0\nCreate Diary: 1\nInsert New Meeting: 2\nFind Meeting: 3");
+		printf("\nRemove Meeting: 4\nPrint Diary: 5\nSave Diary: 6\nDestroy Diary: 7\nExit: 8\n");
 		scanf("%d",&command);
 		switch(command)
 		{
+			
+			case LOAD:	result = LoadDiary(&adPtr);
+					printf("Load result: ");					
+					PrintERRCODE(result);
+					break;	
+
 			case CREATE:	if(adPtr!=NULL)
 					{
 						
@@ -112,7 +96,13 @@ int main()
 						PrintERRCODE(result);
 					}	
 					break;
-			  case DESTROY:	if(adPtr!=NULL)
+	
+			 case SAVE:	result = SaveDiary(adPtr);
+					printf("Save result: ");
+					PrintERRCODE(result);
+					break;		
+
+		      case DESTROY:	if(adPtr!=NULL)
 					{
 						DestroyAD(adPtr);
 						adPtr=NULL;

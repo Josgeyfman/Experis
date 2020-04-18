@@ -1,5 +1,22 @@
 #include"AD.h"
 
+struct Meeting
+{
+	float startTime;
+	float endTime;
+	int roomNum;
+
+};
+
+struct AD_T
+{
+	meetp diary;
+	size_t blockSize;
+	size_t elementNum;
+	size_t size; 
+} ; 
+
+
 ERRCODE SetAD(ad_p _adPtr,meetp _meetPtr,size_t _initialSize,size_t _blockSize,size_t _elementNum)
 {
 	if(_adPtr!=NULL)
