@@ -10,6 +10,10 @@ ERRCODE ReadFirstNlines(char _name[] ,int _n)
 	{                    
 		return ERR_FILE_OPEN;
 	}
+	if(_n < 0)  
+	{                    
+		return ERR_INVALID_INPUT;
+	}
 	while (!feof(fp) && i<_n ) 
 	{
 		fgets ( line, sizeof line, fp ); 
@@ -32,7 +36,10 @@ ERRCODE ReadLastNlines(char _name[] ,int _n)
 	{                    
 		return ERR_FILE_OPEN;
 	}
-
+	if(_n < 0)  
+	{                    
+		return ERR_INVALID_INPUT;
+	}
 	if(!fseek(fp,0,SEEK_END))
 	{
 		pos = ftell(fp); 
@@ -70,7 +77,7 @@ ERRCODE ReadLastNlines(char _name[] ,int _n)
 	return ERR_SUCCESS;
 }
 
-int CountLines(FILE *_fp)
+static int CountLines(FILE *_fp)
 {
 	int i = 0;
 	char line[MAX_LINE];
@@ -87,7 +94,7 @@ int CountLines(FILE *_fp)
 	return i;
 }
 
-void PrintRestOfLines(int _rest,int _lineCount,int* _errorCountPtr)
+static void PrintRestOfLines(int _rest,int _lineCount,int* _errorCountPtr)
 {
 	int i;
 	for(i=1;i<_rest;i++)
@@ -145,6 +152,26 @@ ERRCODE CompareFiles(char _name1[] ,char _name2[])
 	return ERR_SUCCESS;
 }
 
+static void HandleCurrChar(char _currChar,int* _i ,int*  _wordCount,char _word[],char _cword[])
+{
+
+	if(_currChar == ' ' || _currChar == '\n')
+	{
+		_cword[(*_i)]='\0';
+		(*_i)=0;
+		if(0==strcmp(_cword,_word))
+		{
+			(*_wordCount)++;
+		}
+	}
+	else
+	{
+		_cword[(*_i)++]=_currChar;
+	}
+
+
+}
+
 int CountWordInstances(char _fname[] ,char _word[])
 {
 	FILE* fp;
@@ -158,27 +185,14 @@ int CountWordInstances(char _fname[] ,char _word[])
 	while(currChar != EOF)
 	{
 		currChar = fgetc(fp);
-		if(currChar == ' ' || currChar == '\n')
-		{
-			cword[i]='\0';
-			i=0;
-			if(0==strcmp(cword,_word))
-			{
-				wordCount++;
-			}
-		}
-		else
-		{
-			cword[i++]=currChar;
-		}
-
+		HandleCurrChar(currChar,&i,&wordCount,_word,cword);
 	}
 	
 	fclose(fp);
 	return wordCount;
 }
 
-void GetListingData(char* _fname, char* _lname,char* _email)
+static void GetListingData(char* _fname, char* _lname,char* _email)
 {
 	printf("please enter first name\n");
 	scanf("%s",_fname);
@@ -203,6 +217,7 @@ ERRCODE WriteListingsToFile(char _name[],int _listingsNum)
 	
 	for(i=0;i<_listingsNum;i++)
 	{
+		printf("Person No %d details:\n" ,i+1);
 		GetListingData(fname,lname,email);
 		fprintf(fp,"%-20s%-20s%s\n",fname,lname,email);
 	}
@@ -211,7 +226,7 @@ ERRCODE WriteListingsToFile(char _name[],int _listingsNum)
 	return	ERR_SUCCESS;
 }
 
-void FreeALLData(char*** _data,int _row )
+static void FreeALLData(char*** _data,int _row )
 {
 	int i,j;	
 	if(_data!=NULL)
@@ -235,7 +250,7 @@ void FreeALLData(char*** _data,int _row )
 }
 
 
-char*** CreateDataArray(int _lineNum)
+static char*** CreateDataArray(int _lineNum)
 {
 	char*** data ;	
 	int i,j;
@@ -280,9 +295,13 @@ int IsDataCorrect(char _name[],int _lineNum)
 	{
 		return -1;
 	}
-
+	if(_lineNum < 0)  
+	{                    
+		return ERR_INVALID_INPUT;
+	}
 	for(i=0;i<_lineNum;i++)
 	{
+		printf("Person No %d details:\n" ,i+1);
 		GetListingData(data[i][0],data[i][1],data[i][2]);
 	}
 
@@ -340,8 +359,9 @@ void PrintERRCODE(ERRCODE _err)
 	switch(_err)
 	{
 		case ERR_SUCCESS: 	printf("ERR_SUCCESS\n"); 	break;
-		case ERR_SEEK: 		printf("ERR_SEEK\n");  	break;
+		case ERR_SEEK: 		printf("ERR_SEEK\n");  		break;
 		case ERR_FILE_OPEN: 	printf("ERR_FILE_OPEN\n"); 	break;
+		case ERR_INVALID_INPUT:	printf("ERR_INVALID_INPUT\n"); 	break; 
 	}
 }
 

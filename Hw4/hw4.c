@@ -1,10 +1,10 @@
 #include<stdio.h>
 
-int IsPalyndrom();
+int  IsPalyndrom();
 void BubbleSort(int _arr[],int size);
 void Swap(int _arr[],int _val1,int _val2);
 void PrintIntArr(int arr[],int _size);
-int IsEqual(char _str1[],char _str2[]);
+int  IsEqual(char _str1[],char _str2[]);
 
 
 int main(){

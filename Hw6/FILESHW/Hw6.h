@@ -6,7 +6,7 @@
 #define MAX_LINE 50
 #define DATA_LEN 3
 
-typedef enum {ERR_SUCCESS=0,ERR_SEEK=-1,ERR_FILE_OPEN=-2} ERRCODE;
+typedef enum {ERR_SUCCESS=0,ERR_SEEK=-1,ERR_FILE_OPEN=-2,ERR_INVALID_INPUT=-3} ERRCODE;
 
 /*
 	Description: print first N lines of a file
