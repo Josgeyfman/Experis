@@ -1,0 +1,16 @@
+current time:Wed Jun  3 11:22:34 2020
+ pid:14604 module:main trace:Info message:game started
+current time:Wed Jun  3 11:23:04 2020
+ pid:14605 module:main trace:Info message:game started
+current time:Wed Jun  3 11:28:39 2020
+ pid:14674 module:main trace:Info message:game started
+current time:Wed Jun  3 14:49:24 2020
+ pid:24108 module:main trace:Info message:game started
+current time:Wed Jun  3 15:28:49 2020
+ pid:25890 module:main trace:Info message:game started
+current time:Wed Jun  3 15:32:04 2020
+ pid:26068 module:main trace:Info message:game started
+current time:Wed Jun  3 15:46:41 2020
+ pid:26751 file:main.c line:15 func:main trace:Info message:game started
+current time:Wed Jun  3 20:36:17 2020
+ pid:6915 file:main.c line:15 func:main trace:Info message:game started

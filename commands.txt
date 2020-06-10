@@ -1,0 +1,29 @@
+Command line instructions
+
+Git global setup
+git config --global user.name "Evgeny Geyfman"
+git config --global user.email "josjos1989@gmail.com"
+
+Create a new repository
+git clone http://46.101.37.227/h64.evgeny/work.git
+cd work
+touch README.md
+git add README.md
+git commit -m "add README"
+git push -u origin master
+
+Existing folder
+cd existing_folder
+git init
+git remote add origin http://46.101.37.227/h64.evgeny/work.git
+git add .
+git commit
+git push -u origin master
+git commit -m "first"
+git commit -am "second"
+
+Existing Git repository
+cd existing_repo
+git remote add origin http://46.101.37.227/h64.evgeny/work.git
+git push -u origin --all
+git push -u origin --tags
